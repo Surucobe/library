@@ -37,22 +37,33 @@ function addBookToLibrary(book){
   myLibrary.push(book);
 }
 
+function findBookByTitle(title){
+  myLibrary.forEach(book => {
+    if(book.title === title){
+      book.finishBook();
+      return book.readBook();
+    };
+  });
+};
+
 //TODO: Buscar agregar un onclick al elemto read para cambiar el estado de leido a no leido
 function card(obj){
   return(
-    `<div class="card" data-title=${obj.title}>
+    `<div class="card">
       <h2>${obj.validBookTitle()}</h2>
       <img src="${obj.image}" alt="image cover of ${obj.validBookTitle()}'s book">
       <div class="book-info">
         <ul>
           <li>${obj.author}</li>
           <li>${obj.pages}</li>
-          <li onclick="changeReadStatus()">${obj.readBook()}</li>
+          <li data-title=${obj.title}>${obj.readBook()}</li>
         </ul>
       </div>
     </div>`
   )
 }
+
+window.addEventListener('click', (e) => changeReadStatus(e));
 
 function createBook(book){
   return createTemplate(card(book));
@@ -67,13 +78,17 @@ function renderLibrary() {
 }
 
 function changeReadStatus(e) {
-  console.log(e)
+  if(e.target.localName == 'li' && Object.keys(e.target.dataset).length != 0) {
+    const targt = e.target;
+    console.log('fuck it, we ball!');
+    e.target.innerHTML = findBookByTitle(Object.keys(e.target.dataset)[0]);
+  }
   console.log('I totally change the status, trust me bro 👀');
 }
 
+const inferno = new Book('inferno', 'Dan Brown', 480, true, './assets/Dan-Brown-Inferno.png');
 const theHobbit = new Book('the-hobbit', 'J.R.R. Tolkien', 295, true, './assets/The-Hobbit.jpg');
 const theInfiniteAndTheDivine = new Book('the-infinite-and-the-divine', 'Robert Rath', 359, false, './assets/The-Infinite-and-The-Divine-cover.png');
-const inferno = new Book('inferno', 'Dan Brown', 480, true, './assets/Dan-Brown-Inferno.png');
 
 myLibrary.push(theHobbit);
 myLibrary.push(theInfiniteAndTheDivine);
