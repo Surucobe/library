@@ -41,10 +41,14 @@
         </div>
         <fieldset>
           <legend>Have you read this book?</legend>
-          <label for="yes">Yes</label>
-          <input name="read" required value="true" id="yes" type="radio">
-          <label for="no">No</label>
-          <input id="no" required value="false" name="read" type="radio">
+          <div class="radio-input-container">
+            <label for="yes">Yes</label>
+            <input name="read" required value="true" id="yes" type="radio">
+          </div>
+          <div class="radio-input-container">
+            <label for="no">No</label>
+            <input id="no" required value="false" name="read" type="radio">
+          </div>
         </fieldset>
         <button id="submit" type="submit">Submit</button>
       </form>
