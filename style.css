@@ -72,6 +72,7 @@ header {
   background-color: #a7a9be;
   & img {
     max-height: 60%;
+    background-color: #f5f5f5;
   }
   & h2 {
     display: flex;
