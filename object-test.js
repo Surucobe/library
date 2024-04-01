@@ -6,14 +6,13 @@ const $submit = document.getElementById('submit');
 const generalImage = './assets/Book-Generic.png';
 const newBookForm = document.getElementById('form');
 
-
 const myLibrary = [];
 
 function Book(title, author, pages, read, image){
   this.title = title;
   this.author = author;
   this.pages = pages;
-  this.read = read;
+  this.read = read || false;
   this.image = image || generalImage;
 
   this.readBook = function(){
@@ -33,20 +32,38 @@ function Book(title, author, pages, read, image){
   }
 }
 
+const inferno = new Book('inferno', 'Dan Brown', 480, true, './assets/Dan-Brown-Inferno.png');
+const theHobbit = new Book('the-hobbit', 'J.R.R. Tolkien', 295, true, './assets/The-Hobbit.jpg');
+const theInfiniteAndTheDivine = new Book('the-infinite-and-the-divine', 'Robert Rath', 359, false, './assets/The-Infinite-and-The-Divine-cover.png');
+
+myLibrary.push(theHobbit, theInfiniteAndTheDivine, inferno);
+
+function preventDuplicateBook(book) {
+  let result;
+  myLibrary.forEach(libraryBook => {
+    if(libraryBook.title == book.title){
+      alert(`It seems ${book.title} is already in the library`)
+      result = true
+    }
+  })
+  return result
+}
+
 function addBookToLibrary(book){
   myLibrary.push(book);
 }
 
 function findBookByTitle(title){
+  let result
   myLibrary.forEach(book => {
     if(book.title === title){
       book.finishBook();
-      return book.readBook();
+       result = book.readBook();
     };
   });
+  return result;
 };
 
-//TODO: Buscar agregar un onclick al elemto read para cambiar el estado de leido a no leido
 function card(obj){
   return(
     `<div class="card">
@@ -63,8 +80,6 @@ function card(obj){
   )
 }
 
-window.addEventListener('click', (e) => changeReadStatus(e));
-
 function createBook(book){
   return createTemplate(card(book));
 }
@@ -79,26 +94,19 @@ function renderLibrary() {
 
 function changeReadStatus(e) {
   if(e.target.localName == 'li' && Object.keys(e.target.dataset).length != 0) {
-    const targt = e.target;
-    console.log('fuck it, we ball!');
-    e.target.innerHTML = findBookByTitle(Object.keys(e.target.dataset)[0]);
+    const target = e.target;
+    console.log(e.target.dataset.title);
+    target.innerHTML = findBookByTitle(target.dataset.title);
   }
-  console.log('I totally change the status, trust me bro 👀');
 }
-
-const inferno = new Book('inferno', 'Dan Brown', 480, true, './assets/Dan-Brown-Inferno.png');
-const theHobbit = new Book('the-hobbit', 'J.R.R. Tolkien', 295, true, './assets/The-Hobbit.jpg');
-const theInfiniteAndTheDivine = new Book('the-infinite-and-the-divine', 'Robert Rath', 359, false, './assets/The-Infinite-and-The-Divine-cover.png');
-
-myLibrary.push(theHobbit);
-myLibrary.push(theInfiniteAndTheDivine);
-myLibrary.push(inferno);
 
 function createTemplate(string){
   const html = document.implementation.createHTMLDocument();
   html.body.innerHTML = string;
   return html.body.children[0];
 }
+
+window.addEventListener('click', (e) => changeReadStatus(e));
 
 modalButton.addEventListener('click', () => {
   modal.style.display = 'block';
@@ -109,15 +117,18 @@ closeModalButton.addEventListener('click', () => {
 
 newBookForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  let title = document.getElementById('title').value;
+  let title = document.getElementById('title').value.split(' ').join('-');
   let author = document.getElementById('author').value;
   let pages = document.getElementById('pages').value;
   let hasBeenRead = document.getElementById('no').value;
 
-  addBookToLibrary(new Book(title, author, pages, hasBeenRead));
+  let book = new Book(title, author, pages, hasBeenRead);
+
+  if (preventDuplicateBook(book)) return;
+  addBookToLibrary(book);
   renderElement($library, createBook(myLibrary[myLibrary.length-1]));
 
-  console.log(`This is how we looking bud ${title}, ${author.value}, ${pages.value}, ${hasBeenRead}`)
+  console.log(`This is how we looking bud: ${title}, ${author.value}, ${pages.value}, ${hasBeenRead}`)
 })
 
 renderLibrary();
