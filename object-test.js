@@ -1,10 +1,12 @@
 const $library = document.querySelector('.library');
 const modalButton = document.querySelector('.new-book-icon');
 const modal = document.querySelector('.new-book-modal');
-const closeModalButton = document.querySelector('.close-modal');
 const $submit = document.getElementById('submit');
 const generalImage = './assets/Book-Generic.png';
 const newBookForm = document.getElementById('form');
+const closeModalButton = document.querySelector('.close-modal');
+const $messageModal = document.getElementById('message');
+const $buttonModal = document.querySelector('.modal-accept');
 
 const myLibrary = [];
 
@@ -42,8 +44,13 @@ function preventDuplicateBook(book) {
   let result;
   myLibrary.forEach(libraryBook => {
     if(libraryBook.title == book.title){
-      alert(`It seems ${book.title} is already in the library`)
-      result = true
+      alert(`It seems ${book.title} is already in the library`);
+      result = true;
+    } else if(libraryBook.title == book.title && libraryBook.author == book.author){
+      alert(`It seems ${book.title} is already in the library`);
+      result = true;
+    }else{
+      result = false;
     }
   })
   return result
@@ -106,6 +113,13 @@ function createTemplate(string){
   return html.body.children[0];
 }
 
+function showModal() {
+  $messageModal.style.transform = 'translateY(0)';
+}
+function hideModal() {
+  $messageModal.style.transform = 'translateY(-1000px)';
+}
+
 window.addEventListener('click', (e) => changeReadStatus(e));
 
 modalButton.addEventListener('click', () => {
@@ -114,6 +128,7 @@ modalButton.addEventListener('click', () => {
 closeModalButton.addEventListener('click', () => {
   modal.style.display = 'none';
 })
+$buttonModal.addEventListener('click', () => hideModal())
 
 newBookForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -124,7 +139,10 @@ newBookForm.addEventListener('submit', (e) => {
 
   let book = new Book(title, author, pages, hasBeenRead);
 
-  if (preventDuplicateBook(book)) return;
+  if (preventDuplicateBook(book)){
+    showModal();
+    return;
+  }
   addBookToLibrary(book);
   renderElement($library, createBook(myLibrary[myLibrary.length-1]));
 
