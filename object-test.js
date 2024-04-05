@@ -87,6 +87,10 @@ function card(obj){
   )
 }
 
+function modalBookMessage(){
+  return `It seems like the book "${arguments[0]}" is already in the library please check again`
+}
+
 function createBook(book){
   return createTemplate(card(book));
 }
@@ -113,7 +117,8 @@ function createTemplate(string){
   return html.body.children[0];
 }
 
-function showModal() {
+function showModal(title) {
+  $messageModal.querySelector('h1').innerHTML = modalBookMessage(title);
   $messageModal.style.transform = 'translateY(0)';
 }
 function hideModal() {
@@ -140,7 +145,7 @@ newBookForm.addEventListener('submit', (e) => {
   let book = new Book(title, author, pages, hasBeenRead);
 
   if (preventDuplicateBook(book)){
-    showModal();
+    showModal(book.title);
     return;
   }
   addBookToLibrary(book);
