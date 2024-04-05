@@ -1,3 +1,4 @@
+/* TODO: add transition and animation to the modal when it comes in and out of sight */
 * {
   padding: 0;
   margin: 0;
@@ -197,7 +198,7 @@ header {
   position: absolute;
   top: 4em;
   background-color: #fff;
-  border: 6px solid salmon;
+  border: 6px solid rebeccapurple;
   border-radius: 8px;
   height: 10em;
   width: 20em;
@@ -208,8 +209,9 @@ header {
   align-items: center;
   padding: 10px;
   transform: translateY(-1000px);
+  transition: ease-in-out 0.8s;
   & h1 {
-    font-size: 1.5em;
+    font-size: 1em;
   }
   & button {
     cursor: pointer;
